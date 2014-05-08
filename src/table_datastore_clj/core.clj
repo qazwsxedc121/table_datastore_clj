@@ -5,7 +5,16 @@
   ([schema initdata]
    {:schema schema :data initdata}))
 
-;;(def table-example ["name" "sex" "age"] [["john" "M" 13] ["marry" "F" 13]])
+;;(def table-example (table ["name" "sex" "age"] [["john" "M" 13] ["marry" "F" 13]]))
+
+(defn to-map [t i]
+  (let [schema (:schema t)]
+    (zipmap schema i)))
+
+(defn to-maps [t]
+  (let [schema (:schema t)
+        data (:data t)]
+    (map #(zipmap schema %) data)))
 
 (defn find-one-k-v [t k v]
   "find one entry in table , params(t=table k=key v=value), return a array"
@@ -39,16 +48,24 @@
        (find-all-k-v t k v)))
 
 (defn columns [t k]
+  "all values in one columns as a list(not a set)"
+;;(columns table-example "name")
+;;=> ("john" "marry")
   (let [key-index (.indexOf (:schema t) k)]
     (map #(nth % key-index) (:data t))))
 
-(defn to-map [t i]
-  (let [schema (:schema t)]
-    (zipmap schema i)))
+(defn pprint
+  "print table to string beautifuly"
+;;(pprint table-example 10)
+;;=> "name sex  age  \njohn M    13   \nmarryF    13   "
+  ([t] (pprint t 20))
+  ([t max-length]
+   (let [format-word (fn [w] (format (str "%-" max-length "s") w))]
+     (str (apply str (map format-word (t :schema)))
+          (apply str (map #(apply str "\n" (map format-word %)) (t :data)))))))
 
-(defn to-maps [t]
-  (let [schema (:schema t)
-        data (:data t)]
-    (map #(zipmap schema %) data)))
+
+
+
 
 

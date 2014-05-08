@@ -9,7 +9,7 @@ A "Table" is a vector of items with same sechema.
 ### new table
 
 ```
-(def table-example ["name" "sex" "age"] [["john" "M" 13] ["marry" "F" 13]])
+(def table-example (table ["name" "sex" "age"] [["john" "M" 13] ["marry" "F" 13]]))
 ```
 
 ### find using key and value
