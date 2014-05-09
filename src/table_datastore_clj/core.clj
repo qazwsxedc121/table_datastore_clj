@@ -8,10 +8,14 @@
 ;;(def table-example (table ["name" "sex" "age"] [["john" "M" 13] ["marry" "F" 13]]))
 
 (defn to-map [t i]
+;;(to-map table-example ["john" "M" 13])
+;;=> {"name" "john" "sex" "M" "age" 13}
   (let [schema (:schema t)]
     (zipmap schema i)))
 
 (defn to-maps [t]
+;;(to-maps table-example)
+;;=> ({"name" "john" "sex" "M" "age" 13} {"name" "marry" "sex" "F" "age" 13})
   (let [schema (:schema t)
         data (:data t)]
     (map #(zipmap schema %) data)))
@@ -46,6 +50,35 @@
 ;;=> ({"name" "john", "sex" "M", "age" 13} {"name" "marry", "sex" "F", "age" 13})
   (map #(to-map t %)
        (find-all-k-v t k v)))
+
+(defn entry-fits-condition [s e c]
+  "if the entry suits condition, params(s=schema c=condition e=entry)"
+;;(entry-fits-condition (:schema table-example) ["marry" "F" 13] {"sex" "F"})
+;;=> true
+;;(entry-fits-condition (:schema table-example) ["marry" "F" 13] {"age" 12})
+;;=> false
+  (let [c-key-index (map #(.indexOf s %) (keys c))
+        c-vals (vals c)
+        e-vals (map #(nth e %) c-key-index)]
+    (= c-vals e-vals)))
+
+(defn find-one [t c]
+  "find one entry in table , params(t=table c=condition), return a array"
+;;(find-one table-example {"age" 13})
+;;=> ["john" "M" 13]
+  (loop [r (:data t)]
+    (cond
+     (empty? r) nil
+     (entry-fits-condition (:schema t) (first r) c) (first r)
+     :else (recur (rest r)))))
+
+(defn find-all [t c]
+  "find all entry in table with condition, params(t=table c=condition), return arrays"
+;;(find-all table-example {"age" 13})
+;;=> ({"name" "john", "sex" "M", "age" 13} {"name" "marry", "sex" "F", "age" 13})
+  (let [schema (:schema t)
+        data (:data t)]
+    (filter #(entry-fits-condition schema % c) data)))
 
 (defn columns [t k]
   "all values in one columns as a list(not a set)"
