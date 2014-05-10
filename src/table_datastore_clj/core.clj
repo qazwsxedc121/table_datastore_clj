@@ -87,6 +87,25 @@
   (let [key-index (.indexOf (:schema t) k)]
     (map #(nth % key-index) (:data t))))
 
+(defn insert [t e]
+  "insert one entry to table, params(t=table e=entry)"
+;;(insert table-example ["alex" "M" 14])
+;;=> {:schema ["name" "sex" "age"], :data [["john" "M" 13] ["marry" "F" 13] ["alex" "M" 14]]}
+  (table (:schema t)
+         (conj (:data t) e)))
+
+(defn vec-delete [v i]
+  (vec (concat (subvec v 0 i) (subvec v (inc i) (count v)))))
+
+(defn delete-one-index [t i]
+  "delete one entry by index, params(t=table i=index)"
+;;(delete-one-index table-example 0)
+;;=> {:schema ["name" "sex" "age"], :data [["marry" "F" 13]]}
+  (table (:schema t)
+         (vec-delete (:data t) i)))
+
+
+
 (defn pprint
   "print table to string beautifuly"
 ;;(pprint table-example 10)
