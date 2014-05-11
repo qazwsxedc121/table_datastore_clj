@@ -28,6 +28,13 @@ A "Table" is a vector of items with same sechema.
 => ({"name" "john", "sex" "M", "age" 13} {"name" "marry", "sex" "F", "age" 13})
 ```
 
+### pretty print to string
+
+```
+(pprint table-example 10)
+=> "name sex  age  \njohn M    13   \nmarryF    13   "
+```
+
 ## License
 
 Copyright © 2014 qazwsxedc121@gmail.com

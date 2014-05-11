@@ -104,8 +104,6 @@
   (table (:schema t)
          (vec-delete (:data t) i)))
 
-
-
 (defn pprint
   "print table to string beautifuly"
 ;;(pprint table-example 10)
