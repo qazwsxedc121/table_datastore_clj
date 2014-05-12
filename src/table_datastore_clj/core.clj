@@ -104,6 +104,15 @@
   (table (:schema t)
          (vec-delete (:data t) i)))
 
+(defn delete [t c]
+  "find all entry in table with condition, params(t=table c=condition)"
+;;(delete table-example {"sex" "M"})
+;;=> {:schema ["name" "sex" "age"], :data [["marry" "F" 13]]}
+  (let [schema (:schema t)
+        data (:data t)]
+    (table schema
+           (filter #(not (entry-fits-condition schema % c)) data))))
+
 (defn pprint
   "print table to string beautifuly"
 ;;(pprint table-example 10)
