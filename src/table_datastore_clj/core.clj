@@ -80,6 +80,20 @@
         data (:data t)]
     (filter #(entry-fits-condition schema % c) data)))
 
+(defn table-search [t w]
+  "search in the table for keyword, params(t=table w=word)"
+  (let [schema (:schema t)
+        data (:data t)]
+    (filter #((set %) w) data)))
+
+(defn table-sort [t c]
+  "sort data in table by column, params(t=table c=column)"
+  (let [schema (:schema t)
+        column-index (.indexOf schema c)
+        data (:data t)]
+    (table schema
+           (sort-by #(% column-index) data))))
+
 (defn columns [t k]
   "all values in one columns as a list(not a set)"
 ;;(columns table-example "name")
