@@ -5,4 +5,9 @@
 (deftest a-test
   (testing "build table"
     (let [t (table [:a :b] [[1 2] [3 4]])]
-      nil)))
+      (is (= (:schema t) [:a :b]))))
+  (testing "find one"
+    (let [t (table [:a :b] [[1 2] [3 4]])]
+      (is (= (fo t {:b 2}) [1 2])))))
+
+

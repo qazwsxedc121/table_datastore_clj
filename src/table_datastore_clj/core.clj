@@ -1,9 +1,19 @@
 (ns table-datastore-clj.core)
 
+
+(defprotocol IDataTable
+  (fo [t c] "find one"))
+
+(declare find-one)
+
+(defrecord DataTable [schema data]
+  IDataTable
+  (fo [t c] (find-one t c)))
+
 (defn table
   ([schema] (table schema []))
   ([schema initdata]
-   {:schema schema :data initdata}))
+   (DataTable. schema initdata)))
 
 ;;(def table-example (table ["name" "sex" "age"] [["john" "M" 13] ["marry" "F" 13]]))
 
@@ -136,9 +146,3 @@
    (let [format-word (fn [w] (format (str "%-" max-length "s") w))]
      (str (apply str (map format-word (t :schema)))
           (apply str (map #(apply str "\n" (map format-word %)) (t :data)))))))
-
-
-
-
-
-
