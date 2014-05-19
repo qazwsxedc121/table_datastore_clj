@@ -2,13 +2,15 @@
 
 
 (defprotocol IDataTable
-  (fo [t c] "find one"))
+  (get [t c] "find one"))
 
 (declare find-one)
 
-(defrecord DataTable [schema data]
+(defrecord DataTable [schema data])
+
+(extend DataTable
   IDataTable
-  (fo [t c] (find-one t c)))
+  {:get (fn [t c] (find-one t c))})
 
 (defn table
   ([schema] (table schema []))
@@ -136,6 +138,12 @@
         data (:data t)]
     (table schema
            (filter #(not (entry-fits-condition schema % c)) data))))
+
+(defn convert-map-k-k [t k1 k2]
+  "make a map which key=k1 value=k2, params(t=table k1=key1 k2=key2)"
+;;(convert-map-k-k table-example "name" "sex")
+;;=> {"john" "M" "marry" "F"}
+  (zipmap (columns t k1) (columns t k2)))
 
 (defn pprint
   "print table to string beautifuly"
