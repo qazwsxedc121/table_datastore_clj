@@ -1,16 +1,9 @@
 (ns table-datastore-clj.core)
 
 
-(defprotocol IDataTable
-  (get [t c] "find one"))
-
 (declare find-one)
 
 (defrecord DataTable [schema data])
-
-(extend DataTable
-  IDataTable
-  {:get (fn [t c] (find-one t c))})
 
 (defn table
   ([schema] (table schema []))
@@ -84,13 +77,18 @@
      (entry-fits-condition (:schema t) (first r) c) (first r)
      :else (recur (rest r)))))
 
+(defn find-one-as-map [t c]
+  (to-map t (find-one t c)))
+
 (defn find-all [t c]
   "find all entry in table with condition, params(t=table c=condition), return arrays"
-;;(find-all table-example {"age" 13})
-;;=> ({"name" "john", "sex" "M", "age" 13} {"name" "marry", "sex" "F", "age" 13})
   (let [schema (:schema t)
         data (:data t)]
     (filter #(entry-fits-condition schema % c) data)))
+
+(defn find-all-as-map [t c]
+  (map #(to-map t %)
+       (find-all t c)))
 
 (defn table-search [t w]
   "search in the table for keyword, params(t=table w=word)"
